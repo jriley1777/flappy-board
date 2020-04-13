@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const ItemWrapper = styled.div`
@@ -12,7 +12,7 @@ const ItemWrapper = styled.div`
 
 const StyledItem = styled.div`
   width: 100%;
-  height: 80%;
+  height: 90%;
   line-height: 100$;
   border: 1px solid #3d3d3d;
   color: #ede8d5;
@@ -38,7 +38,7 @@ const StyledItem = styled.div`
     position: absolute;
     top: 50%;
     left: 0;
-    border-top: 4px solid #1d1d1d;
+    border-top: 3px solid black;
     width: 100%;
     transform: translateY(-50%);
   }
@@ -46,17 +46,15 @@ const StyledItem = styled.div`
 
 interface SFProps {
     item: string,
-    updateItem: () => string
+    onMouseEnter?: () => void
 }
 
-const SplitFlapItem: React.FC<SFProps> = ({ item, updateItem }) => {
-    const [display, setDisplay] = useState(item);
-    
+const SplitFlapItem: React.FC<SFProps> = ({ item, onMouseEnter}) => {    
     return (
         <ItemWrapper>
             <StyledItem
-                onMouseEnter={ () => setDisplay(updateItem) }
-                >{ display }
+                onMouseEnter={onMouseEnter || undefined}
+                >{ item }
             </StyledItem>
         </ItemWrapper>
     )
