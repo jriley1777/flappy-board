@@ -1,5 +1,4 @@
 import React from 'react';
-import SplitFlapItem from '../SplitFlapItem/SplitFlapItem';
 import SplitFlapGrid from '../SplitFlapGrid/SplitFlapGrid';
 
 interface SFProps {
