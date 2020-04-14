@@ -19,11 +19,14 @@ export const flipTo = (src: string[], destination: string[]) => {
   }
   start.forEach((x, i) => {
     if(x !== end[i]) {
-        start[i] =
-          charMap[x] === 0
-            ? charArray[charArray.length - 1]
-            : charArray[charMap[x] - 1];
+        start[i] = getNextLetter(x);
     }
   });
   return start;
 };
+
+export const getNextLetter = (letter: string) => {
+  return charMap[letter] === 0
+    ? charArray[charArray.length - 1]
+    : charArray[charMap[letter] - 1]; 
+}
