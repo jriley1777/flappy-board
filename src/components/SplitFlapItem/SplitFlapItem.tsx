@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import styled from 'styled-components';
 
 const ItemWrapper = styled.div`
@@ -12,7 +12,7 @@ const ItemWrapper = styled.div`
 
 const StyledItem = styled.div`
   width: 100%;
-  height: 90%;
+  height: 100%;
   line-height: 100$;
   border: 1px solid #3d3d3d;
   color: #ede8d5;
@@ -25,6 +25,7 @@ const StyledItem = styled.div`
   mouse-events: none;
   position: relative;
   box-shadow: inset 4px 3px black;
+  perspective: 500px;
 
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -45,19 +46,17 @@ const StyledItem = styled.div`
 `;
 
 interface SFProps {
-    item: string,
-    onMouseEnter?: () => void
+    item: string
 }
 
-const SplitFlapItem: React.FC<SFProps> = ({ item, onMouseEnter}) => {    
+const SplitFlapItem: React.FC<SFProps> = ({ item }) => {    
     return (
-        <ItemWrapper>
-            <StyledItem
-                onMouseEnter={onMouseEnter || undefined}
-                >{ item }
-            </StyledItem>
-        </ItemWrapper>
-    )
+      <ItemWrapper>
+        <StyledItem>
+          <div>{item}</div>
+        </StyledItem>
+      </ItemWrapper>
+    );
 };
 
 export default SplitFlapItem;
