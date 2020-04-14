@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import styled from 'styled-components';
 import SplitFlapItem from "../SplitFlapItem/SplitFlapItem";
+import { flipTo, charArray } from '../utils/flap';
 
 const StyledGrid = styled.div`
     height: 100%;
@@ -20,28 +21,47 @@ const StyledGridRow = styled.div`
 const SplitFlapGrid: React.FC = ({ children }) => {
     const rowArray = new Array(23).fill(0);
     const colArray = new Array(9).fill(0);
-    const [letterArray, setLetterArray] = useState(new Array(23 * 9).fill('')) 
-    let text = `-- split flaps --                                  by joe riley`;
+    const [letterArray, setLetterArray]: any = useState(new Array(23 * 9).fill(' '));
+    const [nextLetterArray, setNextLetterArray] = useState(new Array(23 * 9).fill(' ')); 
+    let interval: any = useRef();
+    let text = `-- split flaps --                                  by joe riley`.toUpperCase();
     const getLetter = () => {
-        let array = 'abcdefghijklmnopqrstuvwxyz0123456789'.split("");
+        let array = charArray;
         let num = Math.floor(Math.random() * array.length);
         return array[num];
+    }
+    const genRandomArray = () => {
+      let x = letterArray.map(() => getLetter());
+      setLetterArray(x);
     }
     const setLetters = () => {
         let array = text.split("");
         let i = array.length;
         let cen = Math.floor(letterArray.length/2) - Math.floor(i/2);
-        console.log(i, cen)
         let update = [
-          ...letterArray.slice(0, cen),
+          ...new Array(cen).fill(" "),
           ...array,
-          ...letterArray.slice(cen + array.length),
+          ...new Array(letterArray.length - (cen + array.length)).fill(" "),
         ];
-        setLetterArray(update);
+        setNextLetterArray(update);
     }
     useEffect(() => {
-        setLetters();
-    },[]);
+      genRandomArray();
+      setLetters();
+    }, []);
+
+    useEffect(() => {
+      interval.current = setInterval(() => {
+        setLetterArray((letterArray: any) =>
+          flipTo(letterArray, nextLetterArray)
+        );
+      }, 50);
+
+      return () => {
+        clearInterval(interval.current);
+      };
+    }, [nextLetterArray]);
+
     const renderGrid = () => {
         return (
             <StyledGrid>
@@ -49,6 +69,9 @@ const SplitFlapGrid: React.FC = ({ children }) => {
             </StyledGrid>
         )
     }
+    if(letterArray.join("") === nextLetterArray.join("") && interval.current){
+      clearInterval(interval.current)
+    } 
     const renderRow = (rowIndex: number) => {
         return (
             <StyledGridRow key={ rowIndex }>
@@ -57,19 +80,6 @@ const SplitFlapGrid: React.FC = ({ children }) => {
                       <SplitFlapItem
                         key={`${rowIndex}${index}`}
                         item={letterArray[rowIndex * rowArray.length + index]}
-                        onMouseEnter={ () => {
-                            setLetterArray([
-                              ...letterArray.slice(
-                                0,
-                                rowIndex * rowArray.length + index
-                              ),
-                              getLetter(),
-                              ...letterArray.slice(
-                                rowIndex * rowArray.length + index + 1
-                              ),
-                            ]);
-                            }
-                        }
                       />
                     );
                 })}
@@ -78,7 +88,6 @@ const SplitFlapGrid: React.FC = ({ children }) => {
     }
     return (
         <StyledGrid>
-            {console.log(letterArray)}
             {renderGrid()}
         </StyledGrid>
     );
