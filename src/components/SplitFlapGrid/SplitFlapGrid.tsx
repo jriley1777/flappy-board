@@ -11,8 +11,6 @@ import {
 } from "../../utils/flap";
 import { setNextMessage } from '../../features/messagesSlice';
 import * as Selectors from '../../selectors/index';
-import { useInterval } from '../../hooks/index';
-import firebase, { DB } from '../../utils/firebase';
 
 const StyledGrid = styled.div`
   display: none;
@@ -38,43 +36,34 @@ const SplitFlapGrid: React.FC = () => {
     const rowArray = new Array(NUM_COLS).fill(0);
     const colArray = new Array(NUM_ROWS).fill(0);
     const dispatch = useDispatch();
-    const messagesDb = firebase.database().ref(DB.MESSAGES);
     const nextMessage = useSelector(Selectors.getNextMessage);
     const messageQueue = useSelector(Selectors.getMessageQueue);
     const [currentState, setCurrentState] = useState(buildMessageLetterArray(" "))
     let interval: any = useRef();
 
-    const idleMessage = "I'm waiting :(";
+    const idleMessage = "...waiting...";
 
     //initial intro message;
     useEffect(() => {
-      let initialMessage = `-- split flaps --                                  by joe riley`;
+      let initialMessage = `-- Flappy Board --                                  by joe riley`;
       let nextMessage = buildMessageLetterArray(initialMessage);
       dispatch(setNextMessage(nextMessage));
       setTimeout(() => {
         setLoading(false);
-      }, 5000)
+      }, 10000)
     }, []);
 
     useEffect(() => {
-      if(messageQueue.length === 0 && !loading) {
+      if (messageQueue.length === 0 && !loading) {
         setIdle(true);
         dispatch(setNextMessage(buildMessageLetterArray(idleMessage)));
-      } else {
+      } else if (messageQueue.length > 0 && !loading) {
         setIdle(false);
-      }
-    }, [messageQueue.length, loading])
-
-
-
-    useInterval(() => {
-      if (messageQueue.length > 0 && !loading) {
         let newMessageText = messageQueue[0]!.message;
         let nextMessage = buildMessageLetterArray(newMessageText!);
         dispatch(setNextMessage(nextMessage));
-        messagesDb.child(messageQueue[0]!.id).remove();
       }
-    }, 5000);
+    }, [messageQueue.length, loading])
 
     //update for new message;
     useEffect(() => {
