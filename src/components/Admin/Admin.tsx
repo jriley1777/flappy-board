@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import * as Constants from '../../constants/index';
 import firebase, { DB } from '../../utils/firebase';
 
@@ -24,9 +23,9 @@ const AdminHeader = styled.h1`
 `;
 
 const AdminForm = styled.form`
-  min-width: 100px;
+  width: 100%;
   min-height: 200px;
-  margin-top: 20px;
+  padding: 20px;
 
   @media (min-width: 768px) {
     min-width: 540px;
@@ -52,7 +51,6 @@ const FormInput = styled.input`
 `;
 
 const Admin = () => {
-    const dispatch = useDispatch();
     const [ message, setMessage ] = useState("");
     const messagesDb = firebase.database().ref(DB.MESSAGES);
 
