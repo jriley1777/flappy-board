@@ -9,9 +9,10 @@ import {
   NUM_ROWS,
   NUM_COLS,
 } from "../../utils/flap";
-import { setNextMessage, setMessageQueue } from '../../features/messagesSlice';
+import { setNextMessage } from '../../features/messagesSlice';
 import * as Selectors from '../../selectors/index';
 import { useInterval } from '../../hooks/index';
+import firebase, { DB } from '../../utils/firebase';
 
 const StyledGrid = styled.div`
   display: none;
@@ -33,29 +34,45 @@ const StyledGridRow = styled.div`
 
 const SplitFlapGrid: React.FC = () => {
     const [loading, setLoading] = useState(true);
+    const [idle, setIdle] = useState(false);
     const rowArray = new Array(NUM_COLS).fill(0);
     const colArray = new Array(NUM_ROWS).fill(0);
     const dispatch = useDispatch();
+    const messagesDb = firebase.database().ref(DB.MESSAGES);
     const nextMessage = useSelector(Selectors.getNextMessage);
     const messageQueue = useSelector(Selectors.getMessageQueue);
     const [currentState, setCurrentState] = useState(buildMessageLetterArray(" "))
     let interval: any = useRef();
+
+    const idleMessage = "I'm waiting :(";
 
     //initial intro message;
     useEffect(() => {
       let initialMessage = `-- split flaps --                                  by joe riley`;
       let nextMessage = buildMessageLetterArray(initialMessage);
       dispatch(setNextMessage(nextMessage));
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 5000)
     }, []);
+
+    useEffect(() => {
+      if(messageQueue.length === 0 && !loading) {
+        setIdle(true);
+        dispatch(setNextMessage(buildMessageLetterArray(idleMessage)));
+      } else {
+        setIdle(false);
+      }
+    }, [messageQueue.length, loading])
+
+
 
     useInterval(() => {
       if (messageQueue.length > 0 && !loading) {
-        let queue = [...messageQueue];
-        let newMessageText = queue.pop();
+        let newMessageText = messageQueue[0]!.message;
         let nextMessage = buildMessageLetterArray(newMessageText!);
         dispatch(setNextMessage(nextMessage));
-        dispatch(setMessageQueue(queue))
+        messagesDb.child(messageQueue[0]!.id).remove();
       }
     }, 5000);
 

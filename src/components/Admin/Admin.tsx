@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addMessageToQueue } from "../../features/messagesSlice";
 import * as Constants from '../../constants/index';
+import firebase, { DB } from '../../utils/firebase';
 
 const StyledAdmin = styled.div`
     height: 100vh;
@@ -53,15 +53,19 @@ const FormInput = styled.input`
 
 const Admin = () => {
     const dispatch = useDispatch();
-    const [ message, setMessage ] = useState("")
+    const [ message, setMessage ] = useState("");
+    const messagesDb = firebase.database().ref(DB.MESSAGES);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(message)
         if(message){
-            dispatch(addMessageToQueue(message));
+            messagesDb.push().set({
+                text: message
+            })
             setMessage("")
         }
     }
+
     return (
       <StyledAdmin>
         <AdminHeader> Admin </AdminHeader>
