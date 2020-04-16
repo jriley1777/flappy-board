@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from 'styled-components';
 import SplitFlapItem from "../SplitFlapItem/SplitFlapItem";
-import { flipTo, changeMessage, setNextLetters, getNextLetter, NUM_ROWS, NUM_COLS, ARRAY_LENGTH } from '../utils/flap';
+import { flipTo, changeMessage, setNextLetters, getNextLetter, NUM_ROWS, NUM_COLS, ARRAY_LENGTH } from '../../utils/flap';
 
 const StyledGrid = styled.div`
   height: 100%;
@@ -49,7 +49,7 @@ const SplitFlapGrid: React.FC = ({ children }) => {
       setInterval(() => {
         let nextArray: any = changeMessage();
         setNextLetterArray(nextArray);
-      }, 10000);
+      }, 5000);
     }, []);
 
     const renderGrid = () => {
