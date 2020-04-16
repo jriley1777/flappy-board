@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { buildMessageLetterArray } from '../utils/flap';
 
 interface MessagesProps {
-    messageQueue: string[],
+    messageQueue: {id: string, message: string}[],
     nextMessage: string[]
 }
 
@@ -18,36 +18,31 @@ const messages = createSlice({
     setNextMessage(state, action) {
       const nextMessage: string[] = action.payload;
       return {
-          ...state,
-          nextMessage
+        ...state,
+        nextMessage,
       };
     },
-    addMessageToQueue(state, action) {
-      const message: string = action.payload;
+    shiftFromQueue(state) {
       return {
         ...state,
-        messageQueue: [
-          message,
-          ...state.messageQueue,
-        ]
+        messageQueue: state.messageQueue.slice(1),
       };
     },
     setMessageQueue(state, action) {
-      const queue: string[] = action.payload;
+      const queue: MessagesProps['messageQueue'] = action.payload;
       return {
         ...state,
-        messageQueue: queue
-      }
+        messageQueue: queue,
+      };
     },
     clearMessages() {
-        return initial;
-    }
+      return initial;
+    },
   },
 });
 
 export const {
          setNextMessage,
-         addMessageToQueue,
          setMessageQueue,
          clearMessages,
        } = messages.actions;
