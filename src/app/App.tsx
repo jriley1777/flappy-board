@@ -17,6 +17,7 @@ function App() {
   const renderRoutes = () => {
     return Constants.ROUTES.map(route => (
         <Route 
+          key={route.name}
           path={route.path} 
           exact={route.exact} 
           component={route.component} />
