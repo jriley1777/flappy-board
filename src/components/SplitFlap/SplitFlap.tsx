@@ -1,11 +1,7 @@
 import React from 'react';
 import SplitFlapGrid from '../SplitFlapGrid/SplitFlapGrid';
 
-interface SFProps {
-    text: string
-}
-
-const SplitFlap: React.FC<SFProps> = ({ text }) => {
+const SplitFlap: React.FC = () => {
     // const renderText = () => text.split("").map(letter => {
     //     return <SplitFlapItem item={letter} />
     // })
