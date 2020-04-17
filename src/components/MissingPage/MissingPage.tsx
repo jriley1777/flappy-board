@@ -9,7 +9,6 @@ const StyledPage = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font: Inconsolata;
     text-transform: uppercase;
     letter-spacing: 1rem;
     font-size: 1.25rem;

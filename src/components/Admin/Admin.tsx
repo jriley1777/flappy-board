@@ -15,7 +15,6 @@ const StyledAdmin = styled.div`
 
 const AdminHeader = styled.h1`
   font-size: 3rem;
-  font: Inconsolata;
 
   @media (min-width: 768px) {
     font-size: 4rem;
