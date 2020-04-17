@@ -46,16 +46,14 @@ export const buildMessageLetterArray = (text: string) => {
   ];
 };
 
-export const changeMessage = (category?: number) => {
-  let pick = category || Math.floor(Math.random() * 4);
+export const chooseIdleMessage = (category?: number) => {
+  let pick = category || Math.floor(Math.random() * 3);
   switch (pick) {
     case 0:
-      return buildMessageLetterArray("This is a splitboard!");
+      return buildMessageLetterArray("anonymous messaging");
     case 1:
-      return buildMessageLetterArray("Have a nice day!");
+      return buildMessageLetterArray("msg me from ur phone");
     case 2:
-      return buildMessageLetterArray("Hello :)");
-    case 3:
-      return buildMessageLetterArray("flapboard");
+      return buildMessageLetterArray("public message board");
   }
 };
