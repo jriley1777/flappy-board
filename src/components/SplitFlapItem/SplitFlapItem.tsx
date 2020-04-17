@@ -7,8 +7,7 @@ const ItemWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font: Inconsolata;
-  font-size: 4rem;
+  font-size: 3.5rem;
   padding: 3px;
   box-sizing: border-box;
   background: #0d0d0d;

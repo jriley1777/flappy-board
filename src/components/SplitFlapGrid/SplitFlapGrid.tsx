@@ -14,6 +14,7 @@ import * as Selectors from '../../selectors/index';
 
 const StyledGrid = styled.div`
   display: none;
+  font-family: 'Playfair Display', serif;
   @media (min-width: 768px) {
     height: 100%;
     width: 100%;
