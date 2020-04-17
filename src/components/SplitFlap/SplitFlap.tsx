@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
+import { isMobile } from 'react-device-detect';
 import SplitFlapGrid from '../SplitFlapGrid/SplitFlapGrid';
+import Admin from '../Admin/Admin';
 import { useDispatch } from 'react-redux';
 import firebase, { DB } from '../../utils/firebase';
-import { setMessageQueue, clearMessages } from '../../features/messagesSlice';
+import { setMessageQueue } from '../../features/messagesSlice';
 
 const SplitFlap: React.FC = () => {
     const dispatch = useDispatch();
@@ -22,7 +24,9 @@ const SplitFlap: React.FC = () => {
         })
     }, []);
 
-    return (
+    return isMobile ? (
+        <Admin />
+    ) : (
         <SplitFlapGrid />
     )
 };
