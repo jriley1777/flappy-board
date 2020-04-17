@@ -6,6 +6,7 @@ import {
   flipTo,
   buildMessageLetterArray,
   getNextLetter,
+  chooseIdleMessage,
   NUM_ROWS,
   NUM_COLS,
 } from "../../utils/flap";
@@ -41,12 +42,11 @@ const SplitFlapGrid: React.FC = () => {
     const messageQueue = useSelector(Selectors.getMessageQueue);
     const [currentState, setCurrentState] = useState(buildMessageLetterArray(" "))
     let interval: any = useRef();
-
-    const idleMessage = "...waiting...";
+    let idleInterval: any = useRef();
 
     //initial intro message;
     useEffect(() => {
-      let initialMessage = `-- Flappy Board --                                  by joe riley`;
+      let initialMessage = `-- Flappy Board --`;
       let nextMessage = buildMessageLetterArray(initialMessage);
       dispatch(setNextMessage(nextMessage));
       setTimeout(() => {
@@ -57,9 +57,12 @@ const SplitFlapGrid: React.FC = () => {
     useEffect(() => {
       if (messageQueue.length === 0 && !loading) {
         setIdle(true);
-        dispatch(setNextMessage(buildMessageLetterArray(idleMessage)));
+        idleInterval.current = setInterval(() => {
+          dispatch(setNextMessage(chooseIdleMessage()));
+        }, 5000);
       } else if (messageQueue.length > 0 && !loading) {
         setIdle(false);
+        clearInterval(idleInterval.current);
         let newMessageText = messageQueue[0]!.message;
         let nextMessage = buildMessageLetterArray(newMessageText!);
         dispatch(setNextMessage(nextMessage));
