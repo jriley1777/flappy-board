@@ -33,6 +33,7 @@ const StyledGrid = styled(Grid)`
 
   > * {
     width: 90% !important;
+    max-width: 600px !important;
   }
 `;
 
