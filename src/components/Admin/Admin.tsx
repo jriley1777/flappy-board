@@ -9,6 +9,8 @@ import PublicIcon from "@material-ui/icons/Public";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import AppsIcon from "@material-ui/icons/Apps";
 
+import Spotify from '../Spotify/Spotify';
+
 import firebase, { DB } from '../../utils/firebase';
 
 const StyledAdmin = styled.div`
@@ -33,6 +35,7 @@ const StyledGrid = styled(Grid)`
 
   > * {
     width: 90% !important;
+    max-width: 600px !important;
   }
 `;
 
@@ -92,7 +95,15 @@ const Admin = () => {
                 Submit
               </Button>
             </Grid>
-            <Grid item></Grid>
+            <Grid item>
+              <h3>Connected Apps</h3>
+            </Grid>
+            <Grid item>
+              <div>
+                <h4>Spotify</h4>
+                <Spotify />
+              </div>
+            </Grid>
           </StyledGrid>
         </form>
         {/* <BottomNavigation
