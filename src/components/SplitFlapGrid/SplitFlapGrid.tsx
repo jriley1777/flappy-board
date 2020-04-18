@@ -15,7 +15,7 @@ import * as Selectors from '../../selectors/index';
 
 const StyledGrid = styled.div`
   display: none;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   @media (min-width: 768px) {
     height: 100%;
     width: 100%;
@@ -92,9 +92,12 @@ const SplitFlapGrid: React.FC = () => {
         clearInterval(interval.current)
       }
     })
+
     const renderRow = (rowIndex: number) => {
       return (
-        <StyledGridRow key={ rowIndex }>
+        <StyledGridRow 
+          key={ rowIndex }
+          >
           { rowArray.map((_, index) => {
             let curItem = currentState[rowIndex * rowArray.length + index];
             let finalItem = nextMessage[rowIndex * rowArray.length + index];
@@ -112,9 +115,9 @@ const SplitFlapGrid: React.FC = () => {
       )
     }
     return (
-        <StyledGrid>
-            {renderGrid()}
-        </StyledGrid>
+      <StyledGrid>
+        {renderGrid()}
+      </StyledGrid>
     );
 };
 
