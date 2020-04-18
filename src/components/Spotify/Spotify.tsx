@@ -70,7 +70,7 @@ const Spotify = () => {
         if(token){
             setInterval(getCurrentlyPlaying(token), 30000)
         }
-    })
+    }, [token])
 
     useEffect(() => {
         if(code && typeof code === 'string'){
