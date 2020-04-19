@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: flappyboard.com
+Token: eb940d2950a4ccebc09f67061f20680e681fd61d542055c65fdc93782834813a
