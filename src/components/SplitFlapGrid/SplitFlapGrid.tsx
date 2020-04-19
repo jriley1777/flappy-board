@@ -40,14 +40,14 @@ const SplitFlapGrid: React.FC = () => {
     const dispatch = useDispatch();
     const nextMessage = useSelector(Selectors.getNextMessage);
     const messageQueue = useSelector(Selectors.getMessageQueue);
-    const [currentState, setCurrentState] = useState(buildMessageLetterArray(" "))
-    let interval: any = useRef();
+    const [currentState, setCurrentState] = useState(buildMessageLetterArray({ text: " " }))
+    let textUpdateInterval: any = useRef();
     let idleInterval: any = useRef();
 
     //initial intro message;
     useEffect(() => {
       let initialMessage = `-- Flappy Board --`;
-      let nextMessage = buildMessageLetterArray(initialMessage);
+      let nextMessage = buildMessageLetterArray({ text: initialMessage });
       dispatch(setNextMessage(nextMessage));
       setTimeout(() => {
         setLoading(false);
@@ -63,20 +63,21 @@ const SplitFlapGrid: React.FC = () => {
       } else if (messageQueue.length > 0 && !loading) {
         setIdle(false);
         clearInterval(idleInterval.current);
-        let newMessageText = messageQueue[0]!.message;
-        let nextMessage = buildMessageLetterArray(newMessageText!);
+        let nextInQueue = messageQueue[0];
+        console.log(nextInQueue);
+        let nextMessage = buildMessageLetterArray(nextInQueue);
         dispatch(setNextMessage(nextMessage));
       }
     }, [messageQueue.length, loading])
 
     //update for new message;
     useEffect(() => {
-      interval.current = setInterval(() => {
+      textUpdateInterval.current = setInterval(() => {
         setCurrentState((state) => flipTo(state, nextMessage));
       }, 20);
 
       return () => {
-        clearInterval(interval.current);
+        clearInterval(textUpdateInterval.current);
       };
     }, [nextMessage]);
 
@@ -88,8 +89,11 @@ const SplitFlapGrid: React.FC = () => {
         )
     }
     useEffect(() => {
-      if ((currentState.join("") ===  nextMessage.join("")) && interval.current) {
-        clearInterval(interval.current)
+      if (
+        currentState.join("") === nextMessage.join("") &&
+        textUpdateInterval.current
+      ) {
+        clearInterval(textUpdateInterval.current);
       }
     })
 

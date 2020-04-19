@@ -2,13 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 import { buildMessageLetterArray } from '../utils/flap';
 
 interface MessagesProps {
-    messageQueue: {id: string, message: string}[],
+    messageQueue: {
+      id: string, 
+      text: string, 
+      mode?: string,
+      source?: string
+    }[],
     nextMessage: string[]
 }
 
 const initial: MessagesProps = {
   messageQueue: [],
-  nextMessage: buildMessageLetterArray(" "),
+  nextMessage: buildMessageLetterArray({text: " "}),
 };
 
 const messages = createSlice({
