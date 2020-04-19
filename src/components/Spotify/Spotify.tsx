@@ -13,7 +13,7 @@ const Spotify = () => {
     const { code } = qs.parse(location.search, { ignoreQueryPrefix: true });
     const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
     const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
-    const redirectUri = process.env.mode === 'production' ? 
+    const redirectUri = process.env.NODE_ENV === 'production' ? 
         process.env.REACT_APP_SPOTIFY_REDIRECT_URI : 
         'http://localhost:3000/admin';
     let updatePlaying: any = useRef();
