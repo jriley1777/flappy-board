@@ -26,7 +26,7 @@ const StyledGrid = styled.div`
 `;
 const StyledGridRow = styled.div`
   width: 100%;
-  height: calc(100vh / 9);
+  height: calc(100vh / ${NUM_ROWS});
   display: flex;
   flex-direction: row;
   align-items: flex-start;
