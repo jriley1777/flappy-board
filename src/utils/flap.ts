@@ -1,5 +1,5 @@
 export const NUM_COLS = 23;
-export const NUM_ROWS = 7;
+export const NUM_ROWS = 9;
 export const ARRAY_LENGTH = NUM_COLS * NUM_ROWS;
 
 export const charArray = `abcdefghijklmnopqrstuvwxyz0123456789 ,./<>?;:'"[]\`~!@#$%^&*()-=_+\\|`
@@ -35,8 +35,18 @@ export const getNextLetter = (letter: string) => {
     : charArray[charMap[letter] - 1]; 
 }
 
-export const buildMessageLetterArray = (text: string) => {
-  let array = text.toUpperCase().split("");
+export const buildMessageLetterArray = (message: any) => {
+  let array = message.text.toUpperCase().split("");
+  if (message.mode && message.mode === "music") {
+    let intro = "Now on spotify:".toUpperCase().split("");
+    return [
+      ...new Array(24).fill(" "),
+      ...intro,
+      ...new Array(70 - (intro.length + 24)).fill(" "),
+      ...array,
+      ...new Array(ARRAY_LENGTH - (24 + array.length + intro.length + (70-(intro.length + 24)))).fill(" ")
+    ]
+  }
   let i = array.length;
   let cen = Math.floor(ARRAY_LENGTH / 2) - Math.floor(i / 2);
   return [
@@ -50,10 +60,10 @@ export const chooseIdleMessage = (category?: number) => {
   let pick = category || Math.floor(Math.random() * 3);
   switch (pick) {
     case 0:
-      return buildMessageLetterArray("anonymous messaging");
+      return buildMessageLetterArray({ text: "anonymous messaging" });
     case 1:
-      return buildMessageLetterArray("msg me from ur phone");
+      return buildMessageLetterArray({ text: "msg me from ur phone" });
     case 2:
-      return buildMessageLetterArray("public message board");
+      return buildMessageLetterArray({ text: "public message board" });
   }
 };

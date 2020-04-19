@@ -14,8 +14,11 @@ const SplitFlap: React.FC = () => {
         messagesDb.on('value', (snap: any) => {
             if(snap.val()){
                 let queue: {}[] = [];
-                Object.entries(snap.val()).forEach(([key, value]) => {
-                    queue.push({ id: key, message: value.text})
+                Object.entries(snap.val()).forEach(([key, value]:any) => {
+                    queue.push({ 
+                        id: key,
+                        ...value
+                    })
                 });
                 dispatch(setMessageQueue(queue));
             } else {
