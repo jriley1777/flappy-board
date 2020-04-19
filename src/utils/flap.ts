@@ -1,5 +1,5 @@
 export const NUM_COLS = 23;
-export const NUM_ROWS = 9
+export const NUM_ROWS = 7;
 export const ARRAY_LENGTH = NUM_COLS * NUM_ROWS;
 
 export const charArray = `abcdefghijklmnopqrstuvwxyz0123456789 ,./<>?;:'"[]\`~!@#$%^&*()-=_+\\|`

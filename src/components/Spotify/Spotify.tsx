@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import qs from 'qs';
 import axios from 'axios';
@@ -8,11 +8,15 @@ import Button from '@material-ui/core/Button'
 
 const Spotify = () => {
     const [token, setToken] = useState('');
+    const [playing, setPlaying] = useState('');
     const location = useLocation();
     const { code } = qs.parse(location.search, { ignoreQueryPrefix: true });
     const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
     const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
-    const redirectUri = process.env.REACT_APP_SPOTIFY_REDIRECT_URI;
+    const redirectUri = process.env.mode === 'production' ? 
+        process.env.REACT_APP_SPOTIFY_REDIRECT_URI : 
+        'http://localhost:3000/admin';
+    let updatePlaying: any = useRef();
 
     const handleRedirect = async (code: string) => {
         const data = {
@@ -59,7 +63,8 @@ const Spotify = () => {
         if(response.data){
            let name = response.data.item.name;
            let artists = response.data.item.artists.map((x) => x.name);
-           let message = artists.join(" ") + " - " + name;
+           let message = name + " - " + artists.join(", ");
+           setPlaying(message);
            firebase.database().ref(DB.MESSAGES).push().set({
              text: message,
            }); 
@@ -67,16 +72,19 @@ const Spotify = () => {
     }
 
     useEffect(() => {
-        if(token){
-            setInterval(getCurrentlyPlaying(token), 30000)
-        }
-    }, [token])
-
-    useEffect(() => {
         if(code && typeof code === 'string'){
+            console.log(code);
             handleRedirect(code)
         }
     }, [code])
+
+    useEffect(() => {
+      if (token) {
+        updatePlaying.current = setInterval(() => getCurrentlyPlaying(token), 30000);
+      } else {
+        clearInterval(updatePlaying.current)
+      }
+    }, [token]);
 
     const handleLogin = () => {
         let scope = encodeURIComponent("user-read-currently-playing user-read-playback-state");
@@ -85,8 +93,7 @@ const Spotify = () => {
     }
     return token ? (
         <>
-            <div>Token:  {token}</div>
-            <Button variant="contained" color="primary" onClick={() => getCurrentlyPlaying(token)}>Get Playing</Button>
+            <div>Playing:  {playing}</div>
         </>
     ) : (
         <Button color="primary" variant="contained" onClick={handleLogin}>Login with Spotify</Button>

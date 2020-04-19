@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -20,6 +21,14 @@ const StyledAdmin = styled.div`
     font-family: 'PT Display', serif;
     background: white;
     color: #0a0a0a;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  &:hover {
+    color: #0a0fda
+  }
 `;
 
 const StyledHeader = styled.h1`
@@ -45,6 +54,7 @@ const StyledGrid = styled(Grid)`
 const Admin = () => {
     const [ message, setMessage ] = useState("");
     const messagesDb = firebase.database().ref(DB.MESSAGES);
+    const [showNav, setShowNav] = useState(true);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -56,9 +66,24 @@ const Admin = () => {
         }
     }
 
+    const renderBottomNav = () => {
+      return (
+        <BottomNavigation
+          style={{ position: "fixed", bottom: 0, width: "100%" }}
+          showLabels
+        >
+          <BottomNavigationAction label="Public" icon={<PublicIcon />} />
+          <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
+          <BottomNavigationAction label="Connections" icon={<AppsIcon />} />
+        </BottomNavigation>
+      );
+    }
+
     return (
       <StyledAdmin>
-        <StyledHeader>Flappy Board</StyledHeader>
+        <StyledHeader>
+          <StyledLink to="/">Flappy Board</StyledLink>
+        </StyledHeader>
         <form onSubmit={handleSubmit} autoComplete="off">
           <StyledGrid
             container
@@ -83,6 +108,8 @@ const Admin = () => {
                 name="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onFocus={() => setShowNav(false)}
+                onBlur={() => setShowNav(true)}
               />
             </Grid>
             <Grid item>
@@ -106,14 +133,7 @@ const Admin = () => {
             </Grid>
           </StyledGrid>
         </form>
-        {/* <BottomNavigation
-          style={{ position: "fixed", bottom: 0, width: "100%"}}
-          showLabels
-        >
-          <BottomNavigationAction label="Public" icon={<PublicIcon />} />
-          <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="Connections" icon={<AppsIcon />} />
-        </BottomNavigation> */}
+        {showNav && renderBottomNav()}
       </StyledAdmin>
     );
 };
