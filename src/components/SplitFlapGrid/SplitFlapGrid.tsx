@@ -64,7 +64,6 @@ const SplitFlapGrid: React.FC = () => {
         setIdle(false);
         clearInterval(idleInterval.current);
         let nextInQueue = messageQueue[0];
-        console.log(nextInQueue);
         let nextMessage = buildMessageLetterArray(nextInQueue);
         dispatch(setNextMessage(nextMessage));
       }
