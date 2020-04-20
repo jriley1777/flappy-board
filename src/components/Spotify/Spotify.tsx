@@ -6,7 +6,7 @@ import { setIntegration } from '../../features/authSlice';
 import Button from '@material-ui/core/Button';
 import {
   authorize,
-  getSpotifyAccessToken,
+  getSpotifyTokens,
 } from "../../utils/spotify";
 import * as Selectors from '../../selectors/index';
 
@@ -15,22 +15,30 @@ const Spotify = () => {
   const accessToken = useSelector(Selectors.getSpotifyToken);
   const playing = useSelector(Selectors.getCurrentlyPlayingAudio);
   const location = useLocation();
-  const { code } = qs.parse(location.search, { ignoreQueryPrefix: true });
+  const { code: authCode } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
   useEffect(() => {
-      //code if redirect
-      if(code && typeof code === 'string'){
-        getSpotifyAccessToken(code).then(token => {
-          localStorage.setItem("spotifyAccessToken", token);
-          dispatch(setIntegration({ spotify: { token } }));
-        });
-      }
-  }, [code])
+    //code if redirect
+    if (authCode && typeof authCode === "string") {
+      getSpotifyTokens("authorization_code", authCode).then((data) => {
+        if (data) {
+          localStorage.setItem("spotifyAccessToken", data.access_token);
+          localStorage.setItem("spotifyRefreshToken", data.refresh_token);
+          dispatch(
+            setIntegration({
+              spotify: {
+                access_token: data.access_token,
+                refresh_token: data.refresh_token,
+              },
+            })
+          );
+        }
+      });
+    }
+  }, [authCode]);
 
   return accessToken ? (
-    <>
       <div>Current: {playing}</div>
-    </>
   ) : (
     <Button color="primary" variant="contained" onClick={authorize}>
       Login with Spotify

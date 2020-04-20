@@ -35,10 +35,16 @@ function App() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("spotifyAccessToken");
-    if (token) {
-      dispatch(setIntegration({ spotify: { token } }));
-      updateCurrentlyPlaying(token);
+    const access_token = localStorage.getItem("spotifyAccessToken");
+    const refresh_token = localStorage.getItem("spotifyRefreshToken");
+    if (access_token) {
+      dispatch(setIntegration({ 
+        spotify: { 
+          access_token,
+          refresh_token
+        } 
+      }));
+      updateCurrentlyPlaying(access_token);
     }
   }, []);
 
