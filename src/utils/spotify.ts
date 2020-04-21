@@ -12,11 +12,13 @@ export const getCurrentlyPlaying = async (token: string) => {
     .get(url, headers)
     .then((response) => {
       if (response.data) {
+        console.log(response.data)
         let name = response.data.item.name;
         let artists = response.data.item.artists
           .map((artist: string) => artist.name)
           .join(",");
-        return { name, artists };
+        let url = response.data.item.external_urls.spotify;
+        return { name, artists, url };
       }
     })
     .catch((error) => {
