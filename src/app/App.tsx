@@ -37,7 +37,7 @@ function App() {
   useEffect(() => {
     const access_token = localStorage.getItem("spotifyAccessToken");
     const refresh_token = localStorage.getItem("spotifyRefreshToken");
-    if (access_token) {
+    if (access_token && refresh_token) {
       dispatch(setIntegration({ 
         spotify: { 
           access_token,
