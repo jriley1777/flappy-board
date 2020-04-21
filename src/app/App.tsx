@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
-import { setIntegration } from '../features/authSlice';
+import { setIntegration, clearAuth } from '../features/authSlice';
 import { setCurrentlyPlaying, clearCurrentlyPlaying } from '../features/musicSlice';
 import { getCurrentlyPlaying } from '../utils/spotify';
 import firebase, { DB } from '../utils/firebase';
@@ -31,13 +31,18 @@ function App() {
       } else {
         dispatch(clearCurrentlyPlaying());
       }
-    });
+    }).catch(error => {
+      //refresh token request
+      //still error
+      localStorage.removeItem("spotify");
+      dispatch(clearAuth());
+    })
   };
 
   useEffect(() => {
-    const access_token = localStorage.getItem("spotifyAccessToken");
-    const refresh_token = localStorage.getItem("spotifyRefreshToken");
-    if (access_token && refresh_token) {
+    const spotify = localStorage.getItem("spotify");
+    if (spotify) {
+      let { access_token, refresh_token } = JSON.parse(spotify);
       dispatch(setIntegration({ 
         spotify: { 
           access_token,
