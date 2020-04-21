@@ -17,9 +17,8 @@ const Spotify = () => {
 
   useEffect(() => {
     //code if redirect
-    if (params.access_token && params.refresh_token) {
-      localStorage.setItem("spotifyAccessToken", params.access_token);
-      localStorage.setItem("spotifyRefreshToken", params.refresh_token);
+    if (Object.keys(params).length > 0) {
+      localStorage.setItem("spotify", JSON.stringify(params));
       dispatch(
         setIntegration({
           spotify: {
@@ -29,7 +28,6 @@ const Spotify = () => {
         })
       );
       history.replace(history.location.pathname);
-      console.log(history);
     }
   }, []);
 
@@ -39,7 +37,7 @@ const Spotify = () => {
     <Button
       color="primary"
       variant="contained"
-      href="https://us-central1-processing-editor.cloudfunctions.net/api/v1/spotify/auth/"
+      href="https://us-central1-processing-editor.cloudfunctions.net/api/v1/integrations/spotify/"
     >
       Login with Spotify
     </Button>
