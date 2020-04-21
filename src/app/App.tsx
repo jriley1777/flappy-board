@@ -27,7 +27,7 @@ function App() {
       if (song) {
         let track = song.name + " - " + song.artists;
         dispatch(setCurrentlyPlaying(track));
-        firebase.database().ref(DB.MESSAGES).push().set({ text: track, mode: 'music', source: 'spotify' });
+        firebase.database().ref(DB.MESSAGES).push().set({ text: track, mode: 'music', source: 'spotify', url: song.url });
       } else {
         dispatch(clearCurrentlyPlaying());
       }

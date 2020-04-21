@@ -6,7 +6,8 @@ interface MessagesProps {
       id: string, 
       text: string, 
       mode?: string,
-      source?: string
+      source?: string,
+      url?: string,
     }[],
     nextMessage: string[]
 }
