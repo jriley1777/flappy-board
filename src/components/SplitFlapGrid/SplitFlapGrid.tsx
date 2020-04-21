@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import SplitFlapItem from "../SplitFlapItem/SplitFlapItem";
+import AdminFab from '../AdminFab/AdminFab';
 import {
   flipTo,
   buildMessageLetterArray,
@@ -125,6 +126,7 @@ const SplitFlapGrid: React.FC = () => {
     }
     return (
       <StyledGrid>
+        <AdminFab />
         {renderGrid()}
         {renderQR()}
       </StyledGrid>
