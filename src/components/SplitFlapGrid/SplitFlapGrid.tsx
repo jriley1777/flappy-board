@@ -12,6 +12,7 @@ import {
 } from "../../utils/flap";
 import { setNextMessage } from '../../features/messagesSlice';
 import * as Selectors from '../../selectors/index';
+import AudioQRCode from "../AudioQRCode/AudioQRCode";
 
 const StyledGrid = styled.div`
   display: none;
@@ -117,9 +118,15 @@ const SplitFlapGrid: React.FC = () => {
         </StyledGridRow>
       )
     }
+    const renderQR = () => {
+      if (messageQueue.length > 0 && messageQueue[0].mode === "music") {
+        return <AudioQRCode text={messageQueue[0].url!} />;
+      }
+    }
     return (
       <StyledGrid>
         {renderGrid()}
+        {renderQR()}
       </StyledGrid>
     );
 };
