@@ -22,7 +22,7 @@ export const getCurrentlyPlaying = async (token: string) => {
       }
     })
     .catch((error) => {
-      console.error(error);
+      return error;
     });
   return response;
 };
