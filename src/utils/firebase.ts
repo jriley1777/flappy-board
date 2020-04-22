@@ -21,4 +21,9 @@ export const DB = {
     MESSAGES: 'messages'
 };
 
+export const FUNCTIONS_API_HOST =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5000/processing-editor/us-central1/api"
+    : "https://us-central1-processing-editor.cloudfunctions.net/api";
+
 export default firebase;

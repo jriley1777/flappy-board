@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { setIntegration } from '../features/authSlice';
+import { setCurrentlyPlaying } from '../features/musicSlice';
 import { getNewMessage } from '../utils/messageSelector';
 import firebase, { DB } from '../utils/firebase';
 import * as Constants from "../constants/index";
@@ -39,6 +40,9 @@ function App() {
       console.log(message, message && message.mode);
       if(message){
         firebase.database().ref(DB.MESSAGES).push().set(message);
+        if(message.mode && message.mode === 'music') {
+          dispatch(setCurrentlyPlaying(message.text))
+        }
       }
     }, 30000); 
   }, []);
