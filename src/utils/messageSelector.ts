@@ -25,17 +25,15 @@ export const getNewMessage = async () => {
             if(spotify) {
                 return await getCurrentlyPlaying(JSON.parse(spotify).access_token!)
                 .then((song) => {
-                    if (song) {
-                        return {
-                            text: song.name + " - " + song.artists,
-                            mode: 'music',
-                            source: 'spotify',
-                            url: song.url
-                        }
-                    } else {
-                        localStorage.removeItem("spotify")
+                    return {
+                        text: song.name + " - " + song.artists,
+                        mode: 'music',
+                        source: 'spotify',
+                        url: song.url
                     }
-                }).catch(error => console.error(error))
+                }).catch(() => {
+                    localStorage.removeItem("spotify");
+                })
             } else {
                 return;
             }
