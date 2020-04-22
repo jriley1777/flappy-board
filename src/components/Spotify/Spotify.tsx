@@ -6,6 +6,7 @@ import qs from 'qs';
 import { setIntegration } from '../../features/authSlice';
 import Button from '@material-ui/core/Button';
 import * as Selectors from '../../selectors/index';
+import { FUNCTIONS_API_HOST } from "../../utils/firebase";
 
 const Spotify = () => {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ const Spotify = () => {
     <Button
       color="primary"
       variant="contained"
-      href="https://us-central1-processing-editor.cloudfunctions.net/api/v1/integrations/spotify/"
+      href={`${FUNCTIONS_API_HOST}/v1/integrations/spotify/`}
     >
       Login with Spotify
     </Button>

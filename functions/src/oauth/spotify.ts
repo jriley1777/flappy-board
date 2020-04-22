@@ -25,8 +25,19 @@ export const handleRedirect = (req: express.Request, res: express.Response) => {
       redirect_uri: config.redirect_uri,
     })
     .then((result) => {
+      let token = {
+        'access_token': result.access_token,
+        'refresh_token': result.refresh_token,
+        'expires_in': result.expires_in
+      }
+      const accessToken = oauth.accessToken.create(token);
+      console.log(accessToken);
       res.redirect(config.app_redirect + "?" + qs.stringify(result));
     });
+}
+
+export const refreshToken = (req: express.Request, res: express.Response) => {
+
 }
 
 export default {
