@@ -36,7 +36,6 @@ const StyledGridRow = styled.div`
 
 const SplitFlapGrid: React.FC = () => {
     const [loading, setLoading] = useState(true);
-    const [idle, setIdle] = useState(false);
     const rowArray = new Array(NUM_COLS).fill(0);
     const colArray = new Array(NUM_ROWS).fill(0);
     const dispatch = useDispatch();
@@ -44,7 +43,6 @@ const SplitFlapGrid: React.FC = () => {
     const messageQueue = useSelector(Selectors.getMessageQueue);
     const [currentState, setCurrentState] = useState(buildMessageLetterArray({ text: " " }))
     let textUpdateInterval: any = useRef();
-    let idleInterval: any = useRef();
 
     //initial intro message;
     useEffect(() => {
@@ -57,14 +55,7 @@ const SplitFlapGrid: React.FC = () => {
     }, []);
 
     useEffect(() => {
-      if (messageQueue.length === 0 && !loading) {
-        setIdle(true);
-        idleInterval.current = setInterval(() => {
-          dispatch(setNextMessage(chooseIdleMessage()));
-        }, 5000);
-      } else if (messageQueue.length > 0 && !loading) {
-        setIdle(false);
-        clearInterval(idleInterval.current);
+      if (messageQueue.length > 0 && !loading) {
         let nextInQueue = messageQueue[0];
         let nextMessage = buildMessageLetterArray(nextInQueue);
         dispatch(setNextMessage(nextMessage));
