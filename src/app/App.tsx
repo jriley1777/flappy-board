@@ -1,12 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
-import { setIntegration, clearAuth } from '../features/authSlice';
-import { setCurrentlyPlaying, clearCurrentlyPlaying } from '../features/musicSlice';
-import { getCurrentlyPlaying } from '../utils/spotify';
+import { setIntegration } from '../features/authSlice';
+import { getNewMessage } from '../utils/messageSelector';
 import firebase, { DB } from '../utils/firebase';
-import * as Selectors from '../selectors/index';
 import * as Constants from "../constants/index";
 
 
@@ -20,24 +18,7 @@ const StyledApp = styled.div`
 
 function App() {
   const dispatch = useDispatch();
-  const accessToken = useSelector(Selectors.getSpotifyToken);
-  const updatePlaying: any = useRef();
-  const updateCurrentlyPlaying = (accessToken: string) => {
-    getCurrentlyPlaying(accessToken).then((song) => {
-      if (song) {
-        let track = song.name + " - " + song.artists;
-        dispatch(setCurrentlyPlaying(track));
-        firebase.database().ref(DB.MESSAGES).push().set({ text: track, mode: 'music', source: 'spotify', url: song.url });
-      } else {
-        dispatch(clearCurrentlyPlaying());
-      }
-    }).catch(error => {
-      //refresh token request
-      //still error
-      localStorage.removeItem("spotify");
-      dispatch(clearAuth());
-    })
-  };
+  const messageRef: any = useRef();
 
   useEffect(() => {
     const spotify = localStorage.getItem("spotify");
@@ -49,19 +30,18 @@ function App() {
           refresh_token
         } 
       }));
-      updateCurrentlyPlaying(access_token);
     }
   }, []);
 
   useEffect(() => {
-    if (accessToken) {
-      updatePlaying.current = setInterval(() => {
-        updateCurrentlyPlaying(accessToken);
-      }, 30000);
-    } else {
-      clearInterval(updatePlaying.current);
-    }
-  }, [accessToken]);
+    messageRef.current = setInterval(async () => {
+      let message = await getNewMessage();
+      console.log(message, message && message.mode);
+      if(message){
+        firebase.database().ref(DB.MESSAGES).push().set(message);
+      }
+    }, 30000); 
+  }, []);
 
   const renderRoutes = () => {
     return Constants.ROUTES.map(route => (

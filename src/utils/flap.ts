@@ -36,7 +36,14 @@ export const getNextLetter = (letter: string) => {
 }
 
 export const buildMessageLetterArray = (message: any) => {
-  let array = message.text.toUpperCase().split("");
+  let array = message.text.toUpperCase().split("").slice(0, NUM_COLS*6); //TODO: quick hack to set max array;
+  if (message.mode && message.mode === "news" ) {
+    return [
+      ...new Array(24).fill(" "),
+      ...array,
+      ...new Array(ARRAY_LENGTH - (24 + array.length)).fill(" ")
+    ]
+  }
   if (message.mode && message.mode === "music") {
     let intro = "Now on spotify:".toUpperCase().split("");
     return [

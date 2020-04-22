@@ -18,7 +18,7 @@ const AudioQRCode: React.FC<QRProps> = ({ text }) => {
     const canvasRef = useRef(null);
     useEffect(() => {
         QRCode.toCanvas(canvasRef.current, text)
-    }, [])
+    }, [text])
     return (
       <StyledDiv>
         <canvas ref={canvasRef} />
