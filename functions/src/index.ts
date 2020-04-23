@@ -11,5 +11,5 @@ export const timedDelete = functions.database
   .onCreate((snapshot, context) => {
     return setTimeout(() => {
       snapshot.ref.remove();
-    }, 10000);
+    }, 29000);
   });
