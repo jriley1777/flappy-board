@@ -11,8 +11,7 @@ const options = {
 
 //single entry point for next message
 export const getNewMessage = async () => {
-    // let selection = Math.floor(Math.random() * Object.keys(options).length) + 1;
-    let selection = 1;
+    let selection = Math.floor(Math.random() * Object.keys(options).length) + 1;
     switch(selection){
         case 1:
             const data = await firebase
