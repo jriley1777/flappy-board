@@ -1,5 +1,8 @@
 import { RootState } from "../utils/redux";
 
+export const getUser = (state: RootState) => state.auth.user;
+export const getIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
+export const getUserFetching = (state: RootState) => state.auth.isFetching;
 export const getMessageQueue = (state: RootState) => state.messages.messageQueue;
 export const getNextMessage = (state: RootState) => state.messages.nextMessage;
 
