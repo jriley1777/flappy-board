@@ -1,13 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface AuthProps {
-  user: {};
+  user: {
+    uid?: string,
+    name?: string,
+    email?: string,
+    photoURL?: string
+  };
   integrations: {};
+  isLoggedIn: boolean;
+  isFetching: boolean;
 }
 
 const initial: AuthProps = {
   user: {},
   integrations: {},
+  isLoggedIn: false,
+  isFetching: false,
 };
 
 const auth = createSlice({
@@ -19,6 +28,21 @@ const auth = createSlice({
       return {
         ...state,
         user,
+        isLoggedIn: true,
+      };
+    },
+    clearUser(state){
+      return {
+        ...state,
+        user: {},
+        isLoggedIn: false
+      }
+    },
+    setUserFetching(state, action) {
+      const isFetching: boolean = action.payload;
+      return {
+        ...state,
+        isFetching,
       };
     },
     setIntegration(state, action) {
@@ -26,9 +50,9 @@ const auth = createSlice({
       return {
         ...state,
         integrations: {
-            ...state.integrations,
-            ...integration
-        }
+          ...state.integrations,
+          ...integration,
+        },
       };
     },
     clearAuth() {
@@ -39,8 +63,10 @@ const auth = createSlice({
 
 export const {
   setUser,
+  setUserFetching,
   setIntegration,
   clearAuth,
+  clearUser,
 } = auth.actions;
 
 export default auth.reducer;

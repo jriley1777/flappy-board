@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import firebase, { DB } from "../../utils/firebase";
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -11,8 +13,10 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import AppsIcon from "@material-ui/icons/Apps";
 
 import Spotify from '../Spotify/Spotify';
+import Login from '../Login/Login';
 
-import firebase, { DB } from '../../utils/firebase';
+import * as Selectors from '../../selectors/index';
+
 
 const StyledAdmin = styled.div`
     height: 100vh;
@@ -55,12 +59,14 @@ const Admin = () => {
     const [ message, setMessage ] = useState("");
     const messagesDb = firebase.database().ref(DB.MESSAGES);
     const [showNav, setShowNav] = useState(true);
+    const user = useSelector(Selectors.getUser);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if(message){
-            messagesDb.push().set({
-                text: message
+            messagesDb.child("public").push().set({
+                text: message, 
+                public: true
             })
             setMessage("")
         }
@@ -79,6 +85,26 @@ const Admin = () => {
       );
     }
 
+    const renderApps = () => {
+      return user.uid ? (
+        <>
+          <Grid item>
+            <h3>Connected Apps</h3>
+          </Grid>
+          <Grid item>
+            <div>
+              <h4>Spotify</h4>
+              <Spotify />
+            </div>
+          </Grid>
+        </>
+      ) : (
+        <Grid item>
+          <p>Login to see integrations.</p>
+        </Grid>
+      );
+    }
+
     return (
       <StyledAdmin>
         <StyledHeader>
@@ -93,9 +119,11 @@ const Admin = () => {
             spacing={1}
           >
             <Grid item>
+              <Login />
+            </Grid>
+            <Grid item>
               <p>
-                Welcome to the admin page for Flappy Board. Add a message to the
-                public board below.
+                Add a message to the public board below.
               </p>
             </Grid>
             <Grid item>
@@ -122,15 +150,7 @@ const Admin = () => {
                 Submit
               </Button>
             </Grid>
-            <Grid item>
-              <h3>Connected Apps</h3>
-            </Grid>
-            <Grid item>
-              <div>
-                <h4>Spotify</h4>
-                <Spotify />
-              </div>
-            </Grid>
+            { renderApps() }
           </StyledGrid>
         </form>
         {showNav && renderBottomNav()}

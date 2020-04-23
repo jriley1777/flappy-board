@@ -4,7 +4,8 @@ import { buildMessageLetterArray } from '../utils/flap';
 interface MessagesProps {
     messageQueue: {
       id: string, 
-      text: string, 
+      text: string,
+      public: boolean,
       mode?: string,
       source?: string,
       url?: string,
