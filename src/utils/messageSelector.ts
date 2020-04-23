@@ -1,6 +1,7 @@
 import { getTopHeadlines } from './integrations/news';
 import { getCurrentlyPlaying } from './integrations/spotify';
 import { getCryptoPrice } from './integrations/crypto';
+import firebase from '../utils/firebase';
 
 const options = {
     NEWS_HEADLINES: 'NEWS_HEADLINES',
@@ -10,17 +11,28 @@ const options = {
 
 //single entry point for next message
 export const getNewMessage = async () => {
-    let selection = Math.floor(Math.random() * Object.keys(options).length) + 1;
+    // let selection = Math.floor(Math.random() * Object.keys(options).length) + 1;
+    let selection = 1;
     switch(selection){
         case 1:
-            return await getTopHeadlines('us').then((headlines: any) => {
-               let randNum = Math.floor(Math.random() * headlines.length); 
-               return {
-                   text: headlines[randNum].title,
-                   mode: 'news',
-                   public: true,
-               }
-            }).catch(error => console.error(error))
+            const data = await firebase
+              .database()
+              .ref("/content/news/top/us/")
+              .once("value")
+              .then((snap: any) => {
+                if(snap.val()){
+                    let array = Object.entries(snap.val()).map(([key, value]) => value);
+                    let selection = Math.floor(Math.random() * array.length)
+                    let article: any = array[selection];
+                    return {
+                        text: article.title,
+                        mode: 'news',
+                        url: article.url,
+                        public: true
+                    }
+                }
+              });
+              return data;
         case 2:
             let spotify = localStorage.getItem("spotify");
             if(spotify) {
