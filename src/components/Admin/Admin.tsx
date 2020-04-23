@@ -78,9 +78,9 @@ const Admin = () => {
           style={{ position: "fixed", bottom: 0, width: "100%" }}
           showLabels
         >
-          <BottomNavigationAction label="Public" icon={<PublicIcon />} />
-          <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="Connections" icon={<AppsIcon />} />
+          <BottomNavigationAction label="Settings" icon={<PublicIcon />} />
+          <BottomNavigationAction label="Messages" icon={<FavoriteIcon />} />
+          <BottomNavigationAction label="Apps" icon={<AppsIcon />} />
         </BottomNavigation>
       );
     }
