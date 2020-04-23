@@ -80,6 +80,7 @@ const SplitFlapGrid: React.FC = () => {
             </StyledGrid>
         )
     }
+    //clear interval on text change
     useEffect(() => {
       if (
         currentState.join("") === nextMessage.join("") &&
@@ -87,7 +88,7 @@ const SplitFlapGrid: React.FC = () => {
       ) {
         clearInterval(textUpdateInterval.current);
       }
-    })
+    } , [currentState, nextMessage])
 
     const renderRow = (rowIndex: number) => {
       return (
@@ -111,8 +112,8 @@ const SplitFlapGrid: React.FC = () => {
       )
     }
     const renderQR = () => {
-      if (messageQueue.length > 0 && messageQueue[0].mode === "music") {
-        return <AudioQRCode text={messageQueue[0].url!} />;
+      if (messageQueue.length > 0 && messageQueue[0].url) {
+        return <AudioQRCode text={messageQueue[0].url} />;
       }
     }
     return (

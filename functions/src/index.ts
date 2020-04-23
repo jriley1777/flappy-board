@@ -7,9 +7,9 @@ main.use('/v1', app);
 export const api = functions.https.onRequest(main);
 
 export const timedDelete = functions.database
-  .ref("/messages/{messageId}/")
+  .ref("/messages/{parent}/{messageId}/")
   .onCreate((snapshot, context) => {
     return setTimeout(() => {
       snapshot.ref.remove();
-    }, 29000);
+    }, 30000);
   });
