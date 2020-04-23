@@ -17,7 +17,8 @@ export const getNewMessage = async () => {
                let randNum = Math.floor(Math.random() * headlines.length); 
                return {
                    text: headlines[randNum].title,
-                   mode: 'news'
+                   mode: 'news',
+                   public: true,
                }
             }).catch(error => console.error(error))
         case 2:
@@ -25,14 +26,15 @@ export const getNewMessage = async () => {
             if(spotify) {
                 return await getCurrentlyPlaying(JSON.parse(spotify).access_token!)
                 .then((song) => {
-                    return {
-                        text: song.name + " - " + song.artists,
-                        mode: 'music',
-                        source: 'spotify',
-                        url: song.url
+                    if(song && song.name){
+                        return {
+                          text: song.name + " - " + song.artists,
+                          mode: "music",
+                          source: "spotify",
+                          url: song.url,
+                          public: false,
+                        };
                     }
-                }).catch(() => {
-                    localStorage.removeItem("spotify");
                 })
             } else {
                 return;
@@ -40,7 +42,11 @@ export const getNewMessage = async () => {
         case 3:
             return await getCryptoPrice('BTC')
             .then(data => {
-                return { text: data, mode: 'crypto' }
+                return { 
+                    text: data, 
+                    mode: 'crypto',
+                    public: true
+                }
             }).catch(error => console.error(error))
         default:
             return;

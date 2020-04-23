@@ -11,6 +11,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import AppsIcon from "@material-ui/icons/Apps";
 
 import Spotify from '../Spotify/Spotify';
+import Login from '../Login/Login';
 
 import firebase, { DB } from '../../utils/firebase';
 
@@ -59,8 +60,9 @@ const Admin = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if(message){
-            messagesDb.push().set({
-                text: message
+            messagesDb.child("public").push().set({
+                text: message, 
+                public: true
             })
             setMessage("")
         }
@@ -93,9 +95,11 @@ const Admin = () => {
             spacing={1}
           >
             <Grid item>
+              <Login />
+            </Grid>
+            <Grid item>
               <p>
-                Welcome to the admin page for Flappy Board. Add a message to the
-                public board below.
+                Add a message to the public board below.
               </p>
             </Grid>
             <Grid item>

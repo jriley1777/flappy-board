@@ -20,8 +20,9 @@ export const getCurrentlyPlaying = async (token: string) => {
         return { name, artists, url };
       }
     })
-    .catch((error) => {
-      return error;
+    .catch(() => {
+      localStorage.removeItem("spotify");
+      return null;
     });
   return response;
 };
