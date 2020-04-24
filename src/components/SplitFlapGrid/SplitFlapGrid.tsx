@@ -88,7 +88,7 @@ const SplitFlapGrid: React.FC = () => {
       ) {
         clearInterval(textUpdateInterval.current);
       }
-    } , [currentState, nextMessage])
+    })
 
     const renderRow = (rowIndex: number) => {
       return (
