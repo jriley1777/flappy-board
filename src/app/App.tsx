@@ -70,8 +70,7 @@ function App() {
 
   useEffect(() => {
     messageRef.current = setInterval(async () => {
-      let message = await getNewMessage(2);
-      console.log(message, message && message.mode);
+      let message = await getNewMessage();
       if(message && message.text){
         if(!message.public && user.uid) {
           firebase
