@@ -7,10 +7,9 @@ import {
   flipTo,
   buildMessageLetterArray,
   getNextLetter,
-  chooseIdleMessage,
   NUM_ROWS,
   NUM_COLS,
-} from "../../utils/flap";
+} from "../../utils/messages/flap";
 import { setNextMessage } from '../../features/messagesSlice';
 import * as Selectors from '../../selectors/index';
 import AudioQRCode from "../AudioQRCode/AudioQRCode";

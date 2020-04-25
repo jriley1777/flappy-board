@@ -1,4 +1,4 @@
-import { RootState } from "../utils/redux";
+import { RootState } from "../utils/store/redux";
 
 export const getUser = (state: RootState) => state.auth.user;
 export const getIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;

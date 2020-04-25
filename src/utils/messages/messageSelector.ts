@@ -1,7 +1,6 @@
-import { getTopHeadlines } from './integrations/news';
-import { getCurrentlyPlaying } from './integrations/spotify';
-import { getCryptoPrice } from './integrations/crypto';
-import firebase from '../utils/firebase';
+import { getCurrentlyPlaying } from '../integrations/spotify';
+import { getCryptoPrice } from '../integrations/crypto';
+import firebase from '../firebase';
 
 const options = {
     NEWS_HEADLINES: 'NEWS_HEADLINES',
@@ -10,8 +9,8 @@ const options = {
 }
 
 //single entry point for next message
-export const getNewMessage = async () => {
-    let selection = Math.floor(Math.random() * Object.keys(options).length) + 1;
+export const getNewMessage = async (num?: number) => {
+    let selection = num || Math.floor(Math.random() * Object.keys(options).length) + 1;
     switch(selection){
         case 1:
             const data = await firebase

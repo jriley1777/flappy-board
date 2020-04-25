@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { setIntegration } from '../features/authSlice';
 import { setCurrentlyPlaying } from '../features/musicSlice';
-import { setMessageQueue } from '../features/messagesSlice';
-import { getNewMessage } from '../utils/messageSelector';
+import { enqueueMessage, dequeueMessage } from '../features/messagesSlice';
+import { getNewMessage } from '../utils/messages/messageSelector';
 import { setUser, setUserFetching, clearUser } from '../features/authSlice';
 import firebase, { DB } from '../utils/firebase';
 import * as Constants from "../constants/index";
@@ -61,26 +61,16 @@ function App() {
   }, []);
 
   const getMessagesFromDb = (ref: any) => {
-    console.log('retrieved')
-    return ref.on("value", (snap: any) => {
+    return ref.on("child_added", (snap: any) => {
       if (snap.val()) {
-        let queue: {}[] = [];
-        Object.entries(snap.val()).forEach(([key, value]: any) => {
-          queue.push({
-            id: key,
-            ...value,
-          });
-        });
-        dispatch(setMessageQueue(queue));
-      } else {
-        dispatch(setMessageQueue([]));
+        dispatch(enqueueMessage(snap.val()));
       }
     });
   }
 
   useEffect(() => {
     messageRef.current = setInterval(async () => {
-      let message = await getNewMessage();
+      let message = await getNewMessage(2);
       console.log(message, message && message.mode);
       if(message && message.text){
         if(!message.public && user.uid) {
@@ -97,21 +87,24 @@ function App() {
           firebase.database().ref(DB.MESSAGES).child("public").push().set(message);
         }
       }
+      dispatch(dequeueMessage());
     }, 30000);
-    
-    (() => {
-      if(user.uid){
-        let privateRef = firebase.database().ref(DB.MESSAGES).child(user.uid);
-        getMessagesFromDb(privateRef);
-      }
-      let publicRef = firebase.database().ref(DB.MESSAGES).child("public");
-      getMessagesFromDb(publicRef);
-    })();
 
     return () => {
       clearInterval(messageRef.current);
     }
   }, [user]);
+
+  useEffect(() => {
+    (() => {
+      // if(user.uid){
+      //   let privateRef = firebase.database().ref(DB.MESSAGES).child(user.uid);
+      //   getMessagesFromDb(privateRef);
+      // }
+      let publicRef = firebase.database().ref(DB.MESSAGES).child("public");
+      getMessagesFromDb(publicRef);
+    })();
+  }, []);
 
   const renderRoutes = () => {
     return Constants.ROUTES.map(route => (
