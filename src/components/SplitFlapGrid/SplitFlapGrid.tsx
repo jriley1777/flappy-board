@@ -111,8 +111,8 @@ const SplitFlapGrid: React.FC = () => {
       )
     }
     const renderQR = () => {
-      if (messageQueue.length > 0 && messageQueue[0].url) {
-        return <AudioQRCode text={messageQueue[0].url} />;
+      if (messageQueue.length > 0 && messageQueue[0].url && !loading) {
+        return <AudioQRCode url={messageQueue[0].url} />;
       }
     }
     return (

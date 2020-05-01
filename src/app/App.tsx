@@ -8,6 +8,7 @@ import { enqueueMessage, dequeueMessage } from '../features/messagesSlice';
 import { getNewMessage } from '../utils/messages/messageSelector';
 import { setUser, setUserFetching, clearUser } from '../features/authSlice';
 import firebase, { DB } from '../utils/firebase';
+import { useInterval } from '../hooks/useInterval';
 import * as Constants from "../constants/index";
 import * as Selectors from '../selectors/index';
 
@@ -24,7 +25,9 @@ function App() {
   const dispatch = useDispatch();
   const messageRef: any = useRef();
   const user = useSelector(Selectors.getUser);
+  const messageQueue = useSelector(Selectors.getMessageQueue);
 
+  //update user;
   useEffect(() => {
     dispatch(setUserFetching(true));
     firebase.auth().onAuthStateChanged(function (user) {
@@ -47,6 +50,65 @@ function App() {
     });
   }, []);
 
+  const getMessagesFromDb = (ref: any) => {
+    return ref.on("child_added", (snap: any) => {
+      if (snap.val()) {
+        dispatch(enqueueMessage(snap.val()));
+      }
+    });
+  };
+
+  //update public feed;
+  useEffect(() => {
+    (() => {
+      let publicRef = firebase.database().ref("/public");
+      getMessagesFromDb(publicRef);
+    })();
+  }, []);
+
+  //update private feed;
+  useEffect(() => {
+    if (user.uid) {
+      let privateRef = firebase.database().ref(DB.MESSAGES).child(user.uid);
+      getMessagesFromDb(privateRef);
+    }
+    messageRef.current = setInterval(async () => {
+      let message = await getNewMessage();
+      if (message && message.text) {
+        if (!message.public && user.uid) {
+          firebase
+            .database()
+            .ref(DB.MESSAGES)
+            .child(user.uid)
+            .push()
+            .set(message);
+          if (message.mode && message.mode === "music") {
+            dispatch(setCurrentlyPlaying(message.text));
+          }
+        } else if (message.public) {
+          firebase
+            .database()
+            .ref(DB.MESSAGES)
+            .child("public")
+            .push()
+            .set(message);
+        }
+      }
+    }, 30000);
+
+    return () => {
+      clearInterval(messageRef.current);
+    };
+  }, [user]);
+
+  //dequeue interval;
+  useInterval(() => {
+    if(messageQueue.length > 1){
+      dispatch(dequeueMessage());
+    }
+  }, 10000);
+
+  //spotify
   useEffect(() => {
     const spotify = localStorage.getItem("spotify");
     if (spotify) {
@@ -58,51 +120,6 @@ function App() {
         } 
       }));
     }
-  }, []);
-
-  const getMessagesFromDb = (ref: any) => {
-    return ref.on("child_added", (snap: any) => {
-      if (snap.val()) {
-        dispatch(enqueueMessage(snap.val()));
-      }
-    });
-  }
-
-  useEffect(() => {
-    messageRef.current = setInterval(async () => {
-      let message = await getNewMessage();
-      if(message && message.text){
-        if(!message.public && user.uid) {
-          firebase
-            .database()
-            .ref(DB.MESSAGES)
-            .child(user.uid)
-            .push()
-            .set(message);
-          if (message.mode && message.mode === "music") {
-            dispatch(setCurrentlyPlaying(message.text));
-          }
-        } else if(message.public) {
-          firebase.database().ref(DB.MESSAGES).child("public").push().set(message);
-        }
-      }
-      dispatch(dequeueMessage());
-    }, 30000);
-
-    return () => {
-      clearInterval(messageRef.current);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    (() => {
-      // if(user.uid){
-      //   let privateRef = firebase.database().ref(DB.MESSAGES).child(user.uid);
-      //   getMessagesFromDb(privateRef);
-      // }
-      let publicRef = firebase.database().ref(DB.MESSAGES).child("public");
-      getMessagesFromDb(publicRef);
-    })();
   }, []);
 
   const renderRoutes = () => {
