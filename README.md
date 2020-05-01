@@ -36,8 +36,8 @@ Currently working on integrations and personalizing boards:
     * User stored messages
 * Databases
   * Users
-  * Content_options
-  * User_content_options
+  * Content_types
+  * User_content_types
   * Global_content
     * Contains last pull of global content
   * User_content
