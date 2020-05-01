@@ -15,3 +15,4 @@ export const getSpotifyRefreshToken = (state: RootState) => {
   return (spotify && spotify.refresh_token) || "";
 };
 export const getCurrentlyPlayingAudio = (state: RootState) => state.music.currentlyPlaying;
+export const getIsInitialLoad = (state: RootState) => state.app.initialLoad;

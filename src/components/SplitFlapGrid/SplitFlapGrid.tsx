@@ -11,6 +11,7 @@ import {
   NUM_COLS,
 } from "../../utils/messages/flap";
 import { setNextMessage } from '../../features/messagesSlice';
+import { completeInitialLoad } from '../../features/appSlice';
 import * as Selectors from '../../selectors/index';
 import AudioQRCode from "../AudioQRCode/AudioQRCode";
 
@@ -40,17 +41,21 @@ const SplitFlapGrid: React.FC = () => {
     const dispatch = useDispatch();
     const nextMessage = useSelector(Selectors.getNextMessage);
     const messageQueue = useSelector(Selectors.getMessageQueue);
+    const isInitialLoad = useSelector(Selectors.getIsInitialLoad);
     const [currentState, setCurrentState] = useState(buildMessageLetterArray({ text: " " }))
     let textUpdateInterval: any = useRef();
 
     //initial intro message;
     useEffect(() => {
-      let initialMessage = `-- Flappy Board --`;
-      let nextMessage = buildMessageLetterArray({ text: initialMessage });
-      dispatch(setNextMessage(nextMessage));
-      setTimeout(() => {
-        setLoading(false);
-      }, 10000)
+      if(isInitialLoad){
+        let initialMessage = `-- Flappy Board --`;
+        let nextMessage = buildMessageLetterArray({ text: initialMessage });
+        dispatch(setNextMessage(nextMessage));
+        setTimeout(() => {
+          setLoading(false);
+          dispatch(completeInitialLoad());
+        }, 10000)
+      }
     }, []);
 
     useEffect(() => {
