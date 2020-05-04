@@ -1,20 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { buildMessageLetterArray } from '../utils/flap';
+import { buildMessageLetterArray } from '../utils/messages/flap';
+import Queue from '../utils/messages/Queue';
+import * as Models from '../models/index';
 
 interface MessagesProps {
-    messageQueue: {
-      id: string, 
-      text: string,
-      public: boolean,
-      mode?: string,
-      source?: string,
-      url?: string,
-    }[],
+    messageQueue: any[],
     nextMessage: string[]
 }
 
 const initial: MessagesProps = {
-  messageQueue: [],
+  messageQueue: new Queue().serialize(),
   nextMessage: buildMessageLetterArray({text: " "}),
 };
 
@@ -29,17 +24,25 @@ const messages = createSlice({
         nextMessage,
       };
     },
-    shiftFromQueue(state) {
+    enqueueMessage(state, action) {
+      const message: Models.Message = action.payload;
+      const newQueue = new Queue()
+        .deserialize(state.messageQueue)
+        .enqueue(message)
+        .serialize();
       return {
         ...state,
-        messageQueue: state.messageQueue.slice(1),
+        messageQueue: newQueue
       };
     },
-    setMessageQueue(state, action) {
-      const queue: MessagesProps['messageQueue'] = action.payload;
+    dequeueMessage(state) {
+      const newQueue = new Queue()
+        .deserialize(state.messageQueue)
+        .dequeue()
+        .serialize();
       return {
         ...state,
-        messageQueue: queue,
+        messageQueue: newQueue
       };
     },
     clearMessages() {
@@ -49,9 +52,10 @@ const messages = createSlice({
 });
 
 export const {
-         setNextMessage,
-         setMessageQueue,
-         clearMessages,
-       } = messages.actions;
+  enqueueMessage,
+  dequeueMessage,
+  setNextMessage,
+  clearMessages,
+} = messages.actions;
 
 export default messages.reducer;

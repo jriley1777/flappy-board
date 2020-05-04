@@ -45,6 +45,7 @@ const StyledHeader = styled.h1`
 
 const StyledGrid = styled(Grid)`
   margin-top: 2rem !important;
+  min-height: 600px;
 
   > * {
     width: 90% !important;
@@ -57,14 +58,14 @@ const StyledGrid = styled(Grid)`
 
 const Admin = () => {
     const [ message, setMessage ] = useState("");
-    const messagesDb = firebase.database().ref(DB.MESSAGES);
+    const messagesDb = firebase.database().ref('/user_messages');
     const [showNav, setShowNav] = useState(true);
     const user = useSelector(Selectors.getUser);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if(message){
-            messagesDb.child("public").push().set({
+            messagesDb.child(user.uid!).push().set({
                 text: message, 
                 public: true
             })
@@ -89,6 +90,33 @@ const Admin = () => {
       return user.uid ? (
         <>
           <Grid item>
+            <p>Save a message to the board.</p>
+          </Grid>
+          <Grid item>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Add message to board"
+              type="text"
+              placeholder="New Message"
+              name="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onFocus={() => setShowNav(false)}
+              onBlur={() => setShowNav(true)}
+            />
+          </Grid>
+          <Grid item>
+            <Button
+              fullWidth
+              color="primary"
+              type="submit"
+              variant="contained"
+            >
+              Submit
+              </Button>
+          </Grid>
+          {/* <Grid item>
             <h3>Connected Apps</h3>
           </Grid>
           <Grid item>
@@ -96,11 +124,12 @@ const Admin = () => {
               <h4>Spotify</h4>
               <Spotify />
             </div>
-          </Grid>
+          </Grid> */}
         </>
       ) : (
-        <Grid item>
-          <p>Login to see integrations.</p>
+        <Grid item style={{textAlign: 'center'}}>
+          <p>Flappy Board is your personal display board.</p>
+          <p>Login to add custom messages, news, sports, music.</p>
         </Grid>
       );
     }
@@ -120,35 +149,6 @@ const Admin = () => {
           >
             <Grid item>
               <Login />
-            </Grid>
-            <Grid item>
-              <p>
-                Add a message to the public board below.
-              </p>
-            </Grid>
-            <Grid item>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="Add message to board"
-                type="text"
-                placeholder="New Message"
-                name="message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onFocus={() => setShowNav(false)}
-                onBlur={() => setShowNav(true)}
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                fullWidth
-                color="primary"
-                type="submit"
-                variant="contained"
-              >
-                Submit
-              </Button>
             </Grid>
             { renderApps() }
           </StyledGrid>
