@@ -1,4 +1,4 @@
-import { RootState } from "../utils/redux";
+import { RootState } from "../utils/store/redux";
 
 export const getUser = (state: RootState) => state.auth.user;
 export const getIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
@@ -15,3 +15,4 @@ export const getSpotifyRefreshToken = (state: RootState) => {
   return (spotify && spotify.refresh_token) || "";
 };
 export const getCurrentlyPlayingAudio = (state: RootState) => state.music.currentlyPlaying;
+export const getIsInitialLoad = (state: RootState) => state.app.initialLoad;

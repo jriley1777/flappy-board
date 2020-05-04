@@ -6,23 +6,28 @@ const StyledDiv = styled.div`
     position: absolute;
     bottom: 20px;
     right: 20px;
-    // height: 80px !important;
-    // width: 80px !important;
+
+    & > canvas {
+      max-height: 100px !important;
+      max-width: 100px !important;
+    }
 `;
 
 interface QRProps {
-    text: string
+    url: string
 }
 
-const AudioQRCode: React.FC<QRProps> = ({ text }) => {
+const AudioQRCode: React.FC<QRProps> = ({ url }) => {
     const canvasRef = useRef(null);
     useEffect(() => {
-        QRCode.toCanvas(canvasRef.current, text)
-    }, [text])
+        QRCode.toCanvas(canvasRef.current, url)
+    }, [url])
     return (
-      <StyledDiv>
-        <canvas ref={canvasRef} />
-      </StyledDiv>
+      <a href={url} target="_">
+        <StyledDiv>
+            <canvas ref={canvasRef} />
+        </StyledDiv>
+      </a>
     );
 };
 

@@ -4,7 +4,10 @@ import cors from 'cors';
 import integrations from './oauth/index';
 import publicFeed from './public/index';
 
-export const adminApp = admin.initializeApp();
+export const adminApp = admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    databaseURL: "https://processing-editor.firebaseio.com",
+});
 
 //firebase functions:config:get > .runtimeconfig.json
 
@@ -17,5 +20,6 @@ app.get("/", (req: express.Request, res: express.Response) =>
 app.get("/integrations/spotify/", integrations.spotify.authorize);
 app.get("/integrations/spotify/redirect/", integrations.spotify.handleRedirect);
 app.get("/public/news/top/us/", publicFeed.news.getTopHeadlinesUS); //has cron scheduler every 30 min.
+app.get("/public/add_message", publicFeed.addMessageToPublicFeed);
 
 export default app;
